@@ -1,16 +1,15 @@
 ========================================================================
-    WIN32 APPLICATION : pf_ocr Project Overview
+    APPLICATION : pf_ocr Project Overview
 ========================================================================
 
-AppWizard has created this pf_ocr application for you.
+AppWizard has created this pf_ocr Application for you.  
 
 This file contains a summary of what you will find in each of the files that
 make up your pf_ocr application.
 
-
 pf_ocr.vcxproj
-    This is the main project file for VC++ projects generated using an Application Wizard.
-    It contains information about the version of Visual C++ that generated the file, and
+    This is the main project file for VC++ projects generated using an Application Wizard. 
+    It contains information about the version of Visual C++ that generated the file, and 
     information about the platforms, configurations, and project features selected with the
     Application Wizard.
 
@@ -23,28 +22,13 @@ pf_ocr.vcxproj.filters
 
 pf_ocr.cpp
     This is the main application source file.
+    Contains the code to display the form.
 
-/////////////////////////////////////////////////////////////////////////////
-AppWizard has created the following resources:
+Form1.h
+    Contains the implementation of your form class and InitializeComponent() function.
 
-pf_ocr.rc
-    This is a listing of all of the Microsoft Windows resources that the
-    program uses.  It includes the icons, bitmaps, and cursors that are stored
-    in the RES subdirectory.  This file can be directly edited in Microsoft
-    Visual C++.
-
-Resource.h
-    This is the standard header file, which defines new resource IDs.
-    Microsoft Visual C++ reads and updates this file.
-
-pf_ocr.ico
-    This is an icon file, which is used as the application's icon (32x32).
-    This icon is included by the main resource file pf_ocr.rc.
-
-small.ico
-    This is an icon file, which contains a smaller version (16x16)
-    of the application's icon. This icon is included by the main resource
-    file pf_ocr.rc.
+AssemblyInfo.cpp
+    Contains custom attributes for modifying assembly metadata.
 
 /////////////////////////////////////////////////////////////////////////////
 Other standard files:
@@ -52,11 +36,5 @@ Other standard files:
 StdAfx.h, StdAfx.cpp
     These files are used to build a precompiled header (PCH) file
     named pf_ocr.pch and a precompiled types file named StdAfx.obj.
-
-/////////////////////////////////////////////////////////////////////////////
-Other notes:
-
-AppWizard uses "TODO:" comments to indicate parts of the source code you
-should add to or customize.
 
 /////////////////////////////////////////////////////////////////////////////
