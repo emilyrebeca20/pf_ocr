@@ -4,5 +4,5 @@
 #pragma once
 
 // TODO: reference additional headers your program requires here
-//#include "tesseract\baseapi.h"
-//#include "leptonica\allheaders.h"
+#include "tesseract\baseapi.h"
+#include "leptonica\allheaders.h"

@@ -1,4 +1,4 @@
-﻿Build started 12/10/2013 17:36:46.
+﻿Build started 13/10/2013 14:13:19.
      1>Project "C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\pf_ocr\pf_ocr.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Touching "Release\pf_ocr.unsuccessfulbuild".
@@ -6,39 +6,27 @@
        Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
        ClCompile:
          All outputs are up-to-date.
-         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\tesseract\include /I..\leptonica\include /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _UNICODE /D UNICODE /EHa /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Release\pf_ocr.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt pf_ocr.cpp /clr:nostdlib 
+         pf_ocr.cpp
          All outputs are up-to-date.
        CoreResGen:
          All outputs are up-to-date.
        ResourceCompile:
          All outputs are up-to-date.
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe" /INCREMENTAL:NO /NOLOGO /ASSEMBLYRESOURCE:Release\pf_ocr.Form1.resources /MANIFEST /ManifestFile:"Release\pf_ocr.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Release\app.res
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\tesseract\lib /LIBPATH:..\leptonica\lib libtesseract302.lib liblept168.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /ASSEMBLYRESOURCE:Release\pf_ocr.Form1.resources /MANIFEST /ManifestFile:"Release\pf_ocr.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Release\app.res
          Release\AssemblyInfo.obj
          Release\pf_ocr.obj
          Release\stdafx.obj
          "Release\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A000010) "public: virtual char * __clrcall tesseract::ResultIterator::GetUTF8Text(enum tesseract::PageIteratorLevel)const " (?GetUTF8Text@ResultIterator@tesseract@@$$FUBMPADW4PageIteratorLevel@2@@Z) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A000011) "public: virtual bool __clrcall tesseract::ResultIterator::IsAtFinalElement(enum tesseract::PageIteratorLevel,enum tesseract::PageIteratorLevel)const " (?IsAtFinalElement@ResultIterator@tesseract@@$$FUBM_NW4PageIteratorLevel@2@0@Z) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A000012) "public: virtual bool __clrcall tesseract::ResultIterator::IsAtBeginningOf(enum tesseract::PageIteratorLevel)const " (?IsAtBeginningOf@ResultIterator@tesseract@@$$FUBM_NW4PageIteratorLevel@2@@Z) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A000013) "public: virtual bool __clrcall tesseract::ResultIterator::Next(enum tesseract::PageIteratorLevel)" (?Next@ResultIterator@tesseract@@$$FUAM_NW4PageIteratorLevel@2@@Z) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A000014) "public: virtual void __clrcall tesseract::PageIterator::RestartRow(void)" (?RestartRow@PageIterator@tesseract@@$$FUAMXXZ) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A000015) "public: virtual void __clrcall tesseract::PageIterator::RestartParagraph(void)" (?RestartParagraph@PageIterator@tesseract@@$$FUAMXXZ) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A000016) "public: virtual void __clrcall tesseract::ResultIterator::Begin(void)" (?Begin@ResultIterator@tesseract@@$$FUAMXXZ) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A000018) "public: __clrcall tesseract::TessBaseAPI::TessBaseAPI(void)" (??0TessBaseAPI@tesseract@@$$FQAM@XZ) referenced in function "int __clrcall main(cli::array<class System::String ^ >^)" (?main@@$$HYMHP$01AP$AAVString@System@@@Z)
-     1>pf_ocr.obj : error LNK2028: unresolved token (0A00001F) "public: virtual __clrcall tesseract::LTRResultIterator::~LTRResultIterator(void)" (??1LTRResultIterator@tesseract@@$$FUAM@XZ) referenced in function "public: virtual __clrcall tesseract::ResultIterator::~ResultIterator(void)" (??1ResultIterator@tesseract@@$$FUAM@XZ)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: virtual __clrcall tesseract::LTRResultIterator::~LTRResultIterator(void)" (??1LTRResultIterator@tesseract@@$$FUAM@XZ) referenced in function "public: virtual __clrcall tesseract::ResultIterator::~ResultIterator(void)" (??1ResultIterator@tesseract@@$$FUAM@XZ)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: __clrcall tesseract::TessBaseAPI::TessBaseAPI(void)" (??0TessBaseAPI@tesseract@@$$FQAM@XZ) referenced in function "int __clrcall main(cli::array<class System::String ^ >^)" (?main@@$$HYMHP$01AP$AAVString@System@@@Z)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: virtual char * __clrcall tesseract::ResultIterator::GetUTF8Text(enum tesseract::PageIteratorLevel)const " (?GetUTF8Text@ResultIterator@tesseract@@$$FUBMPADW4PageIteratorLevel@2@@Z) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: virtual bool __clrcall tesseract::ResultIterator::IsAtFinalElement(enum tesseract::PageIteratorLevel,enum tesseract::PageIteratorLevel)const " (?IsAtFinalElement@ResultIterator@tesseract@@$$FUBM_NW4PageIteratorLevel@2@0@Z) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: virtual bool __clrcall tesseract::ResultIterator::IsAtBeginningOf(enum tesseract::PageIteratorLevel)const " (?IsAtBeginningOf@ResultIterator@tesseract@@$$FUBM_NW4PageIteratorLevel@2@@Z) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: virtual bool __clrcall tesseract::ResultIterator::Next(enum tesseract::PageIteratorLevel)" (?Next@ResultIterator@tesseract@@$$FUAM_NW4PageIteratorLevel@2@@Z) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: virtual void __clrcall tesseract::PageIterator::RestartRow(void)" (?RestartRow@PageIterator@tesseract@@$$FUAMXXZ) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: virtual void __clrcall tesseract::PageIterator::RestartParagraph(void)" (?RestartParagraph@PageIterator@tesseract@@$$FUAMXXZ) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>pf_ocr.obj : error LNK2019: unresolved external symbol "public: virtual void __clrcall tesseract::ResultIterator::Begin(void)" (?Begin@ResultIterator@tesseract@@$$FUAMXXZ) referenced in function "void __clrcall `dynamic initializer for 'const tesseract::ResultIterator::`vftable'''(void)" (???__E??_7ResultIterator@tesseract@@6B@@@YMXXZ@?A0x08fce2a7@@$$FYMXXZ)
-     1>C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe : fatal error LNK1120: 18 unresolved externals
-     1>Done Building Project "C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\pf_ocr\pf_ocr.vcxproj" (build target(s)) -- FAILED.
+         pf_ocr.vcxproj -> C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe;#1" /manifest Release\pf_ocr.exe.intermediate.manifest
+       FinalizeBuildStatus:
+         Deleting file "Release\pf_ocr.unsuccessfulbuild".
+         Touching "Release\pf_ocr.lastbuildstate".
+     1>Done Building Project "C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\pf_ocr\pf_ocr.vcxproj" (build target(s)).
 
-Build FAILED.
+Build succeeded.
 
-Time Elapsed 00:00:00.35
+Time Elapsed 00:00:00.66

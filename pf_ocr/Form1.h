@@ -34,6 +34,8 @@ namespace pf_ocr {
 				delete components;
 			}
 		}
+	private: System::Windows::Forms::TextBox^  textBox1;
+	protected: 
 
 	private:
 		/// <summary>
@@ -48,13 +50,55 @@ namespace pf_ocr {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->components = gcnew System::ComponentModel::Container();
-			this->Size = System::Drawing::Size(300,300);
-			this->Text = L"Form1";
-			this->Padding = System::Windows::Forms::Padding(0);
+			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
+			this->SuspendLayout();
+			// 
+			// textBox1
+			// 
+			this->textBox1->Location = System::Drawing::Point(12, 12);
+			this->textBox1->Name = L"textBox1";
+			this->textBox1->Size = System::Drawing::Size(207, 20);
+			this->textBox1->TabIndex = 0;
+			// 
+			// Form1
+			// 
+			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->ClientSize = System::Drawing::Size(284, 262);
+			this->Controls->Add(this->textBox1);
+			this->Name = L"Form1";
+			this->Text = L"Form1";
+			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
+			this->ResumeLayout(false);
+			this->PerformLayout();
+
 		}
 #pragma endregion
+	private: System::Void Form1_Load(System::Object^  sender, System::EventArgs^  e) {
+				 char *outText;
+
+					tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
+					// Initialize tesseract-ocr with English, without specifying tessdata path
+					if (api->Init(NULL, "spa")) {
+						fprintf(stderr, "Could not initialize tesseract.\n");
+						exit(1);
+					}
+
+					// Open input image with leptonica library
+					Pix *image = pixRead("image_gallery.png");
+					api->SetImage(image);
+					// Get OCR result
+					outText = api->GetUTF8Text();
+
+					String ^ocrstring = gcnew String(outText);
+					MessageBox::Show(ocrstring);
+					//printf("OCR output:\n%s", outText);
+
+					// Destroy used object and release memory
+					api->End();
+					delete [] outText;
+					pixDestroy(&image);
+			 }
 	};
 }
 
