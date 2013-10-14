@@ -6,3 +6,7 @@
 // TODO: reference additional headers your program requires here
 #include "tesseract\baseapi.h"
 #include "leptonica\allheaders.h"
+
+#include < stdio.h >
+#include < stdlib.h >
+#include < vcclr.h >
