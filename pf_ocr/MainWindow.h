@@ -46,7 +46,7 @@ namespace pf_ocr {
 
 	/* Declared by us */
 	private: array <String^>^ fileNamesGlobal;
-	//private: tesseract::TessBaseAPI *API;
+	private: tesseract::TessBaseAPI *API;
 	/*-----------------*/
 
 	protected: 
@@ -160,8 +160,8 @@ namespace pf_ocr {
 		}
 #pragma endregion
 	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e) {
-				 //API = new tesseract::TessBaseAPI();
-				 //int res = API->Init(NULL,"spa");
+				 API = new tesseract::TessBaseAPI();
+				 int res = API->Init(NULL,"spa");
 				 //MessageBox::Show(System::Convert::ToString(res));
 			 }
 
@@ -170,48 +170,45 @@ private: System::Void openFilesToolStripMenuItem_Click(System::Object^  sender, 
 			 if(this->openFilesDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 				 array<String^>^ filenames = this->openFilesDialog->FileNames;
 				 fileNamesGlobal = filenames;
-				 MessageBox::Show(fileNamesGlobal[0]);
-
+			
+				 /*
 				 char *outText;
-
 				 tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
 				 // Initialize tesseract-ocr with English, without specifying tessdata path
-				 int res = api->Init(".\\", "spa");
-				 MessageBox::Show(System::Convert::ToString(res));
+				 //int res = api->Init(".\\", "spa");
+				 //MessageBox::Show(System::Convert::ToString(res));
+				 api->Init(NULL,"spa");
+				 if (!api->SetVariable("save_blob_choices","T"))
+					 MessageBox::Show("Setting variable failed!!!\n");
 				 // Open input image with leptonica library
 				 Pix *image = pixRead("image_gallery.png");
 				 api->SetImage(image);
-				 
+				 MessageBox::Show("Entry");
 				 outText = api->GetUTF8Text();
-				 //String ^ocrstring = gcnew String(outText);
-				 //MessageBox::Show(ocrstring);
-
+				 String ^ocrstring = gcnew String(outText);
+				 MessageBox::Show(ocrstring);
 				 api->End();
-				 delete [] outText;
+				 //delete [] outText;
+				 MessageBox::Show("Out");
 				 pixDestroy(&image);
-
+				 */
 
 				 /*
-				 ////MessageBox::Show(image_path);
-
+				 //MessageBox::Show(image_path);
 				 // Abrir imagen de entrada con la biblioteca leptonica
 				 Pix *image = pixRead("image_gallery.png");
-				 
 				 API->SetImage(image);
-				 
 				 // Obtener el resultado OCR
 				 char *outText;
 				 outText = API->GetUTF8Text();
 				 String ^ocrstring = gcnew String(outText);
 				 MessageBox::Show(ocrstring);
-				  
 				 //Destruir objetos y liberar memoria
-				 API->ClearAdaptiveClassifier();
-				 delete [] outText;
+				 //API->ClearAdaptiveClassifier();
+				 //delete [] outText;
 				 pixDestroy(&image);
-				 */
 				 MessageBox::Show("Bye!");
-				 
+				 */				 
 			 }
 		 }
 
@@ -224,7 +221,7 @@ private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, Syste
 			 result = MessageBox::Show( this, message, caption, buttons );
 			 if ( result == System::Windows::Forms::DialogResult::Yes )
 			 {
-				 //API->End();
+				 API->End();
 				 Application::Exit();
 			 }
 			 
@@ -241,28 +238,21 @@ System::Void getImageText(System::String^ image_path){
 		err = wcstombs_s(&convertedChars, 
 			ip, sizeInBytes,
 			wch, sizeInBytes);
-
-		tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-		// Inicializando tesseract-ocr en español
-		if (api->Init(NULL, "spa")) {
-			//fprintf(stderr, "Could not initialize tesseract.\n");
-			exit(1);
-		}
 		
 		MessageBox::Show(image_path);
 		// Open input image with leptonica library
 		Pix *image = pixRead(ip);
-		api->SetImage(image);
+		API->SetImage(image);
 		// Get OCR result
-		outText = api->GetUTF8Text();
+		outText = API->GetUTF8Text();
 
 		String ^ocrstring = gcnew String(outText);
 		MessageBox::Show(ocrstring);
-		//printf("OCR output:\n%s", outText);
 
 		// Destroy used object and release memory
-		api->End();
-		delete [] outText;
+		API->ClearAdaptiveClassifier();
+		//delete [] outText;
+		/* IMPORTANTE: averiguar como liberar la memoria de outText!!! */
 		pixDestroy(&image);
 
 	}
