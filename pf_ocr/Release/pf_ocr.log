@@ -1,5 +1,5 @@
-﻿Build started 14/10/2013 21:51:38.
-     1>Project "C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\pf_ocr\pf_ocr.vcxproj" on node 2 (build target(s)).
+﻿Build started 15/10/2013 17:59:55.
+     1>Project "C:\Users\Rafael Machado\Desktop\pf_ocr\pf_ocr\pf_ocr.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Release\pf_ocr.unsuccessfulbuild" because "AlwaysCreate" was specified.
        GenerateTargetFrameworkMonikerAttribute:
@@ -12,24 +12,24 @@
          Generating Code...
          All outputs are up-to-date.
        CoreResGen:
-         All outputs are up-to-date.
+         No resources are out of date with respect to their source files. Skipping resource generation.
        ResourceCompile:
          All outputs are up-to-date.
        Link:
-         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\tesseract\lib /LIBPATH:..\leptonica\lib libtesseract302.lib liblept168.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /ASSEMBLYRESOURCE:Release\pf_ocr.Form1.resources /ASSEMBLYRESOURCE:Release\pf_ocr.MainWindow.resources /MANIFEST /ManifestFile:"Release\pf_ocr.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Release\app.res
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Rafael Machado\Desktop\pf_ocr\Release\pf_ocr.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\tesseract\lib /LIBPATH:..\leptonica\lib libtesseract302.lib liblept168.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /ASSEMBLYRESOURCE:Release\pf_ocr.Form1.resources /ASSEMBLYRESOURCE:Release\pf_ocr.MainWindow.resources /MANIFEST /ManifestFile:"Release\pf_ocr.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Rafael Machado\Desktop\pf_ocr\Release\pf_ocr.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Release\app.res
          Release\AssemblyInfo.obj
          Release\MainWindow.obj
          Release\pf_ocr.obj
          Release\stdafx.obj
          "Release\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
-         pf_ocr.vcxproj -> C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe
+         pf_ocr.vcxproj -> C:\Users\Rafael Machado\Desktop\pf_ocr\Release\pf_ocr.exe
        Manifest:
-         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe;#1" /manifest Release\pf_ocr.exe.intermediate.manifest
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Rafael Machado\Desktop\pf_ocr\Release\pf_ocr.exe;#1" /manifest Release\pf_ocr.exe.intermediate.manifest
        FinalizeBuildStatus:
          Deleting file "Release\pf_ocr.unsuccessfulbuild".
          Touching "Release\pf_ocr.lastbuildstate".
-     1>Done Building Project "C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\pf_ocr\pf_ocr.vcxproj" (build target(s)).
+     1>Done Building Project "C:\Users\Rafael Machado\Desktop\pf_ocr\pf_ocr\pf_ocr.vcxproj" (build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.96
+Time Elapsed 00:00:04.16

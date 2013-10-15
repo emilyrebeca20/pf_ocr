@@ -49,7 +49,21 @@ namespace pf_ocr {
 	/* Declared by us */
 	private: array <String^>^ fileNamesGlobal;
 	private: tesseract::TessBaseAPI *API;
-	/*-----------------*/
+	private: array <Label^>^ labelsArray;
+	private: array <Label^>^ fnlabelsArray;
+
+	private: System::Windows::Forms::SplitContainer^  mainContainer;
+	private: System::Windows::Forms::SplitContainer^  leftContainer;
+	private: System::Windows::Forms::Button^  addField;
+
+	private: System::Windows::Forms::TextBox^  addFieldName;
+	private: System::Windows::Forms::ToolStripMenuItem^  preProcessFilesToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  extractFieldInfoToolStripMenuItem;
+
+
+
+
+			 /*-----------------*/
 
 	protected: 
 
@@ -76,7 +90,19 @@ namespace pf_ocr {
 			this->processToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->readSelectedFilesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFilesDialog = (gcnew System::Windows::Forms::OpenFileDialog());
+			this->mainContainer = (gcnew System::Windows::Forms::SplitContainer());
+			this->leftContainer = (gcnew System::Windows::Forms::SplitContainer());
+			this->addFieldName = (gcnew System::Windows::Forms::TextBox());
+			this->addField = (gcnew System::Windows::Forms::Button());
+			this->preProcessFilesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->extractFieldInfoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menu_File->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->mainContainer))->BeginInit();
+			this->mainContainer->Panel1->SuspendLayout();
+			this->mainContainer->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->leftContainer))->BeginInit();
+			this->leftContainer->Panel1->SuspendLayout();
+			this->leftContainer->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menu_File
@@ -85,7 +111,7 @@ namespace pf_ocr {
 				this->editToolStripMenuItem, this->processToolStripMenuItem});
 			this->menu_File->Location = System::Drawing::Point(0, 0);
 			this->menu_File->Name = L"menu_File";
-			this->menu_File->Size = System::Drawing::Size(853, 24);
+			this->menu_File->Size = System::Drawing::Size(1008, 24);
 			this->menu_File->TabIndex = 0;
 			this->menu_File->Text = L"menu_bar";
 			// 
@@ -100,7 +126,7 @@ namespace pf_ocr {
 			// openFilesToolStripMenuItem
 			// 
 			this->openFilesToolStripMenuItem->Name = L"openFilesToolStripMenuItem";
-			this->openFilesToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->openFilesToolStripMenuItem->Size = System::Drawing::Size(147, 22);
 			this->openFilesToolStripMenuItem->Text = L"Abrir archivos";
 			this->openFilesToolStripMenuItem->ToolTipText = L"Abrir archivos para procesar.";
 			this->openFilesToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::openFilesToolStripMenuItem_Click);
@@ -108,19 +134,19 @@ namespace pf_ocr {
 			// exportToolStripMenuItem
 			// 
 			this->exportToolStripMenuItem->Name = L"exportToolStripMenuItem";
-			this->exportToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->exportToolStripMenuItem->Size = System::Drawing::Size(147, 22);
 			this->exportToolStripMenuItem->Text = L"Exportar";
 			this->exportToolStripMenuItem->ToolTipText = L"Exportar a archivo en formato CSV.";
 			// 
 			// toolStripSeparator1
 			// 
 			this->toolStripSeparator1->Name = L"toolStripSeparator1";
-			this->toolStripSeparator1->Size = System::Drawing::Size(149, 6);
+			this->toolStripSeparator1->Size = System::Drawing::Size(144, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
 			this->exitToolStripMenuItem->Name = L"exitToolStripMenuItem";
-			this->exitToolStripMenuItem->Size = System::Drawing::Size(152, 22);
+			this->exitToolStripMenuItem->Size = System::Drawing::Size(147, 22);
 			this->exitToolStripMenuItem->Text = L"Salir";
 			this->exitToolStripMenuItem->ToolTipText = L"Salir de la aplicación.";
 			this->exitToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::exitToolStripMenuItem_Click);
@@ -133,7 +159,8 @@ namespace pf_ocr {
 			// 
 			// processToolStripMenuItem
 			// 
-			this->processToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) {this->readSelectedFilesToolStripMenuItem});
+			this->processToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {this->preProcessFilesToolStripMenuItem, 
+				this->readSelectedFilesToolStripMenuItem, this->extractFieldInfoToolStripMenuItem});
 			this->processToolStripMenuItem->Name = L"processToolStripMenuItem";
 			this->processToolStripMenuItem->Size = System::Drawing::Size(64, 20);
 			this->processToolStripMenuItem->Text = L"Procesar";
@@ -141,7 +168,7 @@ namespace pf_ocr {
 			// readSelectedFilesToolStripMenuItem
 			// 
 			this->readSelectedFilesToolStripMenuItem->Name = L"readSelectedFilesToolStripMenuItem";
-			this->readSelectedFilesToolStripMenuItem->Size = System::Drawing::Size(220, 22);
+			this->readSelectedFilesToolStripMenuItem->Size = System::Drawing::Size(265, 22);
 			this->readSelectedFilesToolStripMenuItem->Text = L"Leer archivos seleccionados";
 			this->readSelectedFilesToolStripMenuItem->ToolTipText = L"Aplica OCR a las imágenes seleccionadas.";
 			this->readSelectedFilesToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::readSelectedFilesToolStripMenuItem_Click);
@@ -151,18 +178,87 @@ namespace pf_ocr {
 			this->openFilesDialog->Filter = L"Todos los archivos permitidos|*.tif;*.png;*.jpg;*.jpeg";
 			this->openFilesDialog->Multiselect = true;
 			// 
+			// mainContainer
+			// 
+			this->mainContainer->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->mainContainer->Location = System::Drawing::Point(0, 24);
+			this->mainContainer->Name = L"mainContainer";
+			// 
+			// mainContainer.Panel1
+			// 
+			this->mainContainer->Panel1->Controls->Add(this->leftContainer);
+			this->mainContainer->Size = System::Drawing::Size(1008, 537);
+			this->mainContainer->SplitterDistance = 300;
+			this->mainContainer->TabIndex = 1;
+			// 
+			// leftContainer
+			// 
+			this->leftContainer->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->leftContainer->Location = System::Drawing::Point(0, 0);
+			this->leftContainer->Name = L"leftContainer";
+			this->leftContainer->Orientation = System::Windows::Forms::Orientation::Horizontal;
+			// 
+			// leftContainer.Panel1
+			// 
+			this->leftContainer->Panel1->Controls->Add(this->addFieldName);
+			this->leftContainer->Panel1->Controls->Add(this->addField);
+			this->leftContainer->Size = System::Drawing::Size(300, 537);
+			this->leftContainer->SplitterDistance = 350;
+			this->leftContainer->TabIndex = 0;
+			// 
+			// addFieldName
+			// 
+			this->addFieldName->Location = System::Drawing::Point(13, 15);
+			this->addFieldName->Name = L"addFieldName";
+			this->addFieldName->Size = System::Drawing::Size(179, 20);
+			this->addFieldName->TabIndex = 2;
+			// 
+			// addField
+			// 
+			this->addField->Location = System::Drawing::Point(198, 14);
+			this->addField->Name = L"addField";
+			this->addField->Size = System::Drawing::Size(90, 23);
+			this->addField->TabIndex = 0;
+			this->addField->Text = L"Agregar campo";
+			this->addField->UseVisualStyleBackColor = true;
+			this->addField->Click += gcnew System::EventHandler(this, &MainWindow::addField_Click);
+			// 
+			// preProcessFilesToolStripMenuItem
+			// 
+			this->preProcessFilesToolStripMenuItem->Name = L"preProcessFilesToolStripMenuItem";
+			this->preProcessFilesToolStripMenuItem->Size = System::Drawing::Size(265, 22);
+			this->preProcessFilesToolStripMenuItem->Text = L"Pre-procesar archivos seleccionados";
+			// 
+			// extractFieldInfoToolStripMenuItem
+			// 
+			this->extractFieldInfoToolStripMenuItem->Name = L"extractFieldInfoToolStripMenuItem";
+			this->extractFieldInfoToolStripMenuItem->Size = System::Drawing::Size(265, 22);
+			this->extractFieldInfoToolStripMenuItem->Text = L"Extraer información de campos";
+			this->extractFieldInfoToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::extractFieldInfoToolStripMenuItem_Click);
+			// 
 			// MainWindow
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(853, 443);
+			this->AutoScroll = true;
+			this->AutoSize = true;
+			this->ClientSize = System::Drawing::Size(1008, 561);
+			this->Controls->Add(this->mainContainer);
 			this->Controls->Add(this->menu_File);
 			this->MainMenuStrip = this->menu_File;
+			this->MaximizeBox = false;
 			this->Name = L"MainWindow";
 			this->Text = L"MainWindow";
 			this->Load += gcnew System::EventHandler(this, &MainWindow::MainWindow_Load);
 			this->menu_File->ResumeLayout(false);
 			this->menu_File->PerformLayout();
+			this->mainContainer->Panel1->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->mainContainer))->EndInit();
+			this->mainContainer->ResumeLayout(false);
+			this->leftContainer->Panel1->ResumeLayout(false);
+			this->leftContainer->Panel1->PerformLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->leftContainer))->EndInit();
+			this->leftContainer->ResumeLayout(false);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -171,6 +267,9 @@ namespace pf_ocr {
 	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e) {
 				 API = new tesseract::TessBaseAPI();
 				 int res = API->Init(NULL,"spa");
+				 fileNamesGlobal = gcnew array<String^>(0);
+				 labelsArray = gcnew array<Label^>(0);
+				 fnlabelsArray = gcnew array<Label^>(0);
 				 //MessageBox::Show(System::Convert::ToString(res));
 			 }
 
@@ -178,14 +277,14 @@ namespace pf_ocr {
 private: System::Void openFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if(this->openFilesDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 				 array<String^>^ filenames = this->openFilesDialog->FileNames;
-				 fileNamesGlobal = filenames;
-				 //int len = fileNamesGlobal->Length;
-				 //System::Array::Resize(fileNamesGlobal,filenames->Length+len);
-				 //int fngIndex = len;
-				 //int fnIndex = 0; 
-				 //for(fnIndex;fnIndex<filenames->Length;fnIndex++)
-					// fileNamesGlobal[fngIndex] = filenames[fnIndex];
-				 
+				 int len = fileNamesGlobal->Length;
+				 int fngIndex = len;
+				 int fnIndex = 0;
+				 Array::Resize(fileNamesGlobal,len+(filenames->Length));
+				 for(fnIndex;fnIndex<filenames->Length;fnIndex++){
+					fileNamesGlobal[fngIndex] = filenames[fnIndex];
+					fngIndex++;
+				 }
 			
 				 /*
 				 char *outText;
@@ -243,7 +342,7 @@ private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, Syste
 			 
 		 }
 
-System::Void getImageText(System::String^ image_path){
+System::String^ getImageText(System::String^ image_path){
 		char *outText;
 
 		pin_ptr<const wchar_t> wch = PtrToStringChars(image_path);
@@ -255,7 +354,7 @@ System::Void getImageText(System::String^ image_path){
 			ip, sizeInBytes,
 			wch, sizeInBytes);
 		
-		MessageBox::Show(image_path);
+		//MessageBox::Show(image_path);
 		// Open input image with leptonica library
 		Pix *image = pixRead(ip);
 		API->SetImage(image);
@@ -263,14 +362,14 @@ System::Void getImageText(System::String^ image_path){
 		outText = API->GetUTF8Text();
 
 		String ^ocrstring = gcnew String(outText);
-		MessageBox::Show(ocrstring);
+		//MessageBox::Show(ocrstring);
 
 		// Destroy used object and release memory
 		API->ClearAdaptiveClassifier();
 		//delete [] outText;
 		/* IMPORTANTE: averiguar como liberar la memoria de outText!!! */
 		pixDestroy(&image);
-
+		return ocrstring;
 	}
 
 /* Comienza a procesar los archivos seleccionados*/
@@ -279,10 +378,40 @@ System::Void getImageText(System::String^ image_path){
 				 for(i = 0; i < fileNamesGlobal->Length;i++){
 					String^ msg = fileNamesGlobal[i];
 					//MessageBox::Show(msg);
-					getImageText(msg);
+					String^ ocrtext = getImageText(msg);
+					//MessageBox::Show(ocrtext);
 				 }
 			 
 			 }
+
+private: System::Void addField_Click(System::Object^  sender, System::EventArgs^  e) {
+			 if(this->addFieldName->Text->Length){
+				System::Windows::Forms::Label^  labeln;
+				labeln = gcnew System::Windows::Forms::Label();
+				
+				int len = labelsArray->Length;
+				int offset = 52+((15+5)*len);
+
+				labeln->AutoSize = true;
+				labeln->Location = System::Drawing::Point(20,offset);
+				labeln->Name = L"l" + this->addFieldName->Text;
+				labeln->Size = System::Drawing::Size(this->addFieldName->Text->Length,15);
+				labeln->TabIndex = 3;
+				labeln->Text = this->addFieldName->Text;
+				labeln->BringToFront();
+
+				System::Array::Resize(labelsArray,len+1);
+				this->labelsArray[len] = labeln;
+				leftContainer->Panel1->Controls->Add(labelsArray[len]);
+
+				//MessageBox::Show(labeln->Text);
+				//MessageBox::Show(labeln->Name);
+
+				this->addFieldName->Text = "";
+			 }
+		 }
+private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+		 }
 };
 }
 
