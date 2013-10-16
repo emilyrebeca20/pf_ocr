@@ -1,4 +1,4 @@
-﻿Build started 15/10/2013 17:59:55.
+﻿Build started 16/10/2013 18:53:07.
      1>Project "C:\Users\Rafael Machado\Desktop\pf_ocr\pf_ocr\pf_ocr.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Release\pf_ocr.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -32,4 +32,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.16
+Time Elapsed 00:00:01.41

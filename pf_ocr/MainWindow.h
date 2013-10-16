@@ -49,6 +49,9 @@ namespace pf_ocr {
 	/* Declared by us */
 	private: array <String^>^ fileNamesGlobal;
 	private: tesseract::TessBaseAPI *API;
+	private: String ^ocrstring; 
+
+
 	private: array <Label^>^ labelsArray;
 	private: array <Label^>^ fnlabelsArray;
 
@@ -59,6 +62,8 @@ namespace pf_ocr {
 	private: System::Windows::Forms::TextBox^  addFieldName;
 	private: System::Windows::Forms::ToolStripMenuItem^  preProcessFilesToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  extractFieldInfoToolStripMenuItem;
+	private: System::Windows::Forms::DataGridView^  fieldTable;
+
 
 
 
@@ -88,21 +93,24 @@ namespace pf_ocr {
 			this->exitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->editToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->processToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->preProcessFilesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->readSelectedFilesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->extractFieldInfoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFilesDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->mainContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->leftContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->addFieldName = (gcnew System::Windows::Forms::TextBox());
 			this->addField = (gcnew System::Windows::Forms::Button());
-			this->preProcessFilesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->extractFieldInfoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->fieldTable = (gcnew System::Windows::Forms::DataGridView());
 			this->menu_File->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->mainContainer))->BeginInit();
 			this->mainContainer->Panel1->SuspendLayout();
+			this->mainContainer->Panel2->SuspendLayout();
 			this->mainContainer->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->leftContainer))->BeginInit();
 			this->leftContainer->Panel1->SuspendLayout();
 			this->leftContainer->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->fieldTable))->BeginInit();
 			this->SuspendLayout();
 			// 
 			// menu_File
@@ -165,6 +173,12 @@ namespace pf_ocr {
 			this->processToolStripMenuItem->Size = System::Drawing::Size(64, 20);
 			this->processToolStripMenuItem->Text = L"Procesar";
 			// 
+			// preProcessFilesToolStripMenuItem
+			// 
+			this->preProcessFilesToolStripMenuItem->Name = L"preProcessFilesToolStripMenuItem";
+			this->preProcessFilesToolStripMenuItem->Size = System::Drawing::Size(265, 22);
+			this->preProcessFilesToolStripMenuItem->Text = L"Pre-procesar archivos seleccionados";
+			// 
 			// readSelectedFilesToolStripMenuItem
 			// 
 			this->readSelectedFilesToolStripMenuItem->Name = L"readSelectedFilesToolStripMenuItem";
@@ -172,6 +186,13 @@ namespace pf_ocr {
 			this->readSelectedFilesToolStripMenuItem->Text = L"Leer archivos seleccionados";
 			this->readSelectedFilesToolStripMenuItem->ToolTipText = L"Aplica OCR a las imágenes seleccionadas.";
 			this->readSelectedFilesToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::readSelectedFilesToolStripMenuItem_Click);
+			// 
+			// extractFieldInfoToolStripMenuItem
+			// 
+			this->extractFieldInfoToolStripMenuItem->Name = L"extractFieldInfoToolStripMenuItem";
+			this->extractFieldInfoToolStripMenuItem->Size = System::Drawing::Size(265, 22);
+			this->extractFieldInfoToolStripMenuItem->Text = L"Extraer información de campos";
+			this->extractFieldInfoToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::extractFieldInfoToolStripMenuItem_Click);
 			// 
 			// openFilesDialog
 			// 
@@ -187,6 +208,10 @@ namespace pf_ocr {
 			// mainContainer.Panel1
 			// 
 			this->mainContainer->Panel1->Controls->Add(this->leftContainer);
+			// 
+			// mainContainer.Panel2
+			// 
+			this->mainContainer->Panel2->Controls->Add(this->fieldTable);
 			this->mainContainer->Size = System::Drawing::Size(1008, 537);
 			this->mainContainer->SplitterDistance = 300;
 			this->mainContainer->TabIndex = 1;
@@ -223,18 +248,15 @@ namespace pf_ocr {
 			this->addField->UseVisualStyleBackColor = true;
 			this->addField->Click += gcnew System::EventHandler(this, &MainWindow::addField_Click);
 			// 
-			// preProcessFilesToolStripMenuItem
+			// fieldTable
 			// 
-			this->preProcessFilesToolStripMenuItem->Name = L"preProcessFilesToolStripMenuItem";
-			this->preProcessFilesToolStripMenuItem->Size = System::Drawing::Size(265, 22);
-			this->preProcessFilesToolStripMenuItem->Text = L"Pre-procesar archivos seleccionados";
-			// 
-			// extractFieldInfoToolStripMenuItem
-			// 
-			this->extractFieldInfoToolStripMenuItem->Name = L"extractFieldInfoToolStripMenuItem";
-			this->extractFieldInfoToolStripMenuItem->Size = System::Drawing::Size(265, 22);
-			this->extractFieldInfoToolStripMenuItem->Text = L"Extraer información de campos";
-			this->extractFieldInfoToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::extractFieldInfoToolStripMenuItem_Click);
+			this->fieldTable->AllowUserToAddRows = false;
+			this->fieldTable->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->fieldTable->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->fieldTable->Location = System::Drawing::Point(0, 0);
+			this->fieldTable->Name = L"fieldTable";
+			this->fieldTable->Size = System::Drawing::Size(704, 537);
+			this->fieldTable->TabIndex = 0;
 			// 
 			// MainWindow
 			// 
@@ -253,12 +275,14 @@ namespace pf_ocr {
 			this->menu_File->ResumeLayout(false);
 			this->menu_File->PerformLayout();
 			this->mainContainer->Panel1->ResumeLayout(false);
+			this->mainContainer->Panel2->ResumeLayout(false);
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->mainContainer))->EndInit();
 			this->mainContainer->ResumeLayout(false);
 			this->leftContainer->Panel1->ResumeLayout(false);
 			this->leftContainer->Panel1->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->leftContainer))->EndInit();
 			this->leftContainer->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->fieldTable))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -361,7 +385,7 @@ System::String^ getImageText(System::String^ image_path){
 		// Get OCR result
 		outText = API->GetUTF8Text();
 
-		String ^ocrstring = gcnew String(outText);
+		ocrstring = gcnew String(outText);
 		//MessageBox::Show(ocrstring);
 
 		// Destroy used object and release memory
@@ -379,7 +403,7 @@ System::String^ getImageText(System::String^ image_path){
 					String^ msg = fileNamesGlobal[i];
 					//MessageBox::Show(msg);
 					String^ ocrtext = getImageText(msg);
-					//MessageBox::Show(ocrtext);
+					MessageBox::Show(ocrtext);
 				 }
 			 
 			 }
@@ -411,6 +435,33 @@ private: System::Void addField_Click(System::Object^  sender, System::EventArgs^
 			 }
 		 }
 private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			array <String^>^ fieldNames = gcnew array <String^>(this->labelsArray->Length);
+			array <String^>^ fieldContent = gcnew array <String^>(this->labelsArray->Length);
+			
+			for (int i=0; i<labelsArray->Length; i++)
+			{
+				fieldNames[i] = this->labelsArray[i]->Text;
+			}
+
+			
+
+			fieldContent = this->ocrstring->Split(fieldNames,StringSplitOptions::None);
+			
+			MessageBox::Show(Convert::ToString(fieldContent->Length));
+			for (int i=0; i<fieldContent->Length; i++)
+			{
+				MessageBox::Show(Convert::ToString(i));
+				MessageBox::Show(fieldContent[i]);
+			}
+
+			fieldTable->ColumnCount = fieldNames->Length+1;
+			fieldTable->Columns[0]->Name = "#";
+			int j = 0;
+			for (int i=1; i<=fieldNames->Length; i++){
+				fieldTable->Columns[i]->Name = fieldNames[j];
+				j++;
+			}
+
 		 }
 };
 }
