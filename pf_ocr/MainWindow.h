@@ -54,6 +54,8 @@ namespace pf_ocr {
 
 	private: array <Label^>^ labelsArray;
 	private: array <Label^>^ fnlabelsArray;
+	private: array <String^>^ fieldNames;
+	
 
 	private: System::Windows::Forms::SplitContainer^  mainContainer;
 	private: System::Windows::Forms::SplitContainer^  leftContainer;
@@ -403,7 +405,8 @@ System::String^ getImageText(System::String^ image_path){
 					String^ msg = fileNamesGlobal[i];
 					//MessageBox::Show(msg);
 					String^ ocrtext = getImageText(msg);
-					MessageBox::Show(ocrtext);
+					extractFieldContent();
+					//MessageBox::Show(ocrtext);
 				 }
 			 
 			 }
@@ -434,26 +437,17 @@ private: System::Void addField_Click(System::Object^  sender, System::EventArgs^
 				this->addFieldName->Text = "";
 			 }
 		 }
+
+
 private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			array <String^>^ fieldNames = gcnew array <String^>(this->labelsArray->Length);
-			array <String^>^ fieldContent = gcnew array <String^>(this->labelsArray->Length);
+			this->fieldNames = gcnew array <String^>(this->labelsArray->Length);
+			
 			
 			for (int i=0; i<labelsArray->Length; i++)
 			{
 				fieldNames[i] = this->labelsArray[i]->Text;
 			}
-
 			
-
-			fieldContent = this->ocrstring->Split(fieldNames,StringSplitOptions::None);
-			
-			MessageBox::Show(Convert::ToString(fieldContent->Length));
-			for (int i=0; i<fieldContent->Length; i++)
-			{
-				MessageBox::Show(Convert::ToString(i));
-				MessageBox::Show(fieldContent[i]);
-			}
-
 			fieldTable->ColumnCount = fieldNames->Length+1;
 			fieldTable->Columns[0]->Name = "#";
 			int j = 0;
@@ -463,6 +457,44 @@ private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  s
 			}
 
 		 }
+
+private: System::Void extractFieldContent(){
+			 this->fieldNames = gcnew array <String^>(this->labelsArray->Length);
+			 //MessageBox::Show(Convert::ToString(labelsArray->Length));
+
+			 for (int i=0; i<labelsArray->Length; i++)
+			 {
+				 fieldNames[i] = this->labelsArray[i]->Text;
+			 }
+
+			 array <String^>^ fieldContent = gcnew array <String^>(this->labelsArray->Length);
+			 fieldContent = this->ocrstring->Split(fieldNames,StringSplitOptions::None);	
+
+			// MessageBox::Show(Convert::ToString(fieldContent->Length));
+
+			 /*for (int i=0; i<fieldContent->Length; i++)
+			 {
+				 MessageBox::Show(Convert::ToString(i));
+				 MessageBox::Show(fieldContent[i]);
+			 }*/
+			 //MessageBox::Show(row);
+
+			 fieldTable->ColumnCount = fieldNames->Length+1;
+			 fieldTable->Columns[0]->Name = "#";
+			 int j = 0;
+			 for (int i=1; i<=fieldNames->Length; i++){
+				 fieldTable->Columns[i]->Name = fieldNames[j];
+				 j++;
+			 }
+
+			 int^ rowNumber = (fieldTable->Rows->Count) + 1;
+			 //MessageBox::Show(Convert::ToString(rowNumber));
+			 fieldContent[0] = Convert::ToString(rowNumber);
+
+			 DataGridViewRowCollection^ rows = this->fieldTable->Rows;
+			 rows->Add(fieldContent);
+		 }
+
 };
 }
 
