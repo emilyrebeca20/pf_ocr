@@ -1,20 +1,20 @@
 pf_ocr
 ======
 
-Proyecto Final para la materia Procesamiento Digital de Imágenes
+Proyecto Final para la materia Procesamiento Digital de Imï¿½genes
 ------
 
-La aplicación hace uso de las bibliotecas tesseract(https://code.google.com/p/tesseract-ocr/) 
-y leptonica(http://www.leptonica.org/) para la extracción de los caracteres presentes en la 
+La aplicaciï¿½n hace uso de las bibliotecas tesseract(https://code.google.com/p/tesseract-ocr/) 
+y leptonica(http://www.leptonica.org/) para la extracciï¿½n de los caracteres presentes en la 
 imagen de un formulario que ha sido previamente escaneado.
 
 Funcionalidades que restan por implementar:
 * Mejoras en la interfaz.
-* Pre-procesamiento de las imágenes escaneadas.
-* Exportar información de los formularios a archivos de formato CSV.
+* Pre-procesamiento de las imï¿½genes escaneadas.
+* Exportar informaciï¿½n de los formularios a archivos de formato CSV.
 
-Uso de la aplicación:
+Uso de la aplicaciï¿½n:
 * Seleccionar la(s) imagen(es).
-* Agregar los campos (Como esten en el formulario. Ejm: Nombre:).
-* Seleccionar la opción "Leer archivos seleccionados" en el menú "Procesar".
+* Agregar los campos (Como aparecen en el formulario. Ejm: Nombre:).
+* Seleccionar la opciï¿½n "Leer archivos seleccionados" en el menï¿½ "Procesar".
 
