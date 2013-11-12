@@ -53,6 +53,7 @@ namespace pf_ocr {
 
 
 	private: array <Label^>^ labelsArray;
+	private: array <Button^>^ buttonsArray;
 	private: array <Label^>^ fnlabelsArray;
 	private: array <String^>^ fieldNames;
 	
@@ -65,6 +66,7 @@ namespace pf_ocr {
 	private: System::Windows::Forms::ToolStripMenuItem^  preProcessFilesToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  extractFieldInfoToolStripMenuItem;
 	private: System::Windows::Forms::DataGridView^  fieldTable;
+
 
 
 
@@ -295,6 +297,7 @@ namespace pf_ocr {
 				 int res = API->Init(NULL,"spa");
 				 fileNamesGlobal = gcnew array<String^>(0);
 				 labelsArray = gcnew array<Label^>(0);
+				 buttonsArray = gcnew array<Button^>(0);
 				 fnlabelsArray = gcnew array<Label^>(0);
 				 //MessageBox::Show(System::Convert::ToString(res));
 			 }
@@ -399,7 +402,7 @@ System::String^ getImageText(System::String^ image_path){
 	}
 
 /* Comienza a procesar los archivos seleccionados*/
-	private: System::Void readSelectedFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+private: System::Void readSelectedFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 				 int i;
 				 for(i = 0; i < fileNamesGlobal->Length;i++){
 					String^ msg = fileNamesGlobal[i];
@@ -411,25 +414,40 @@ System::String^ getImageText(System::String^ image_path){
 			 
 			 }
 
+/* Agrega un campo a buscar en el formulario */
 private: System::Void addField_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if(this->addFieldName->Text->Length){
 				System::Windows::Forms::Label^  labeln;
+				System::Windows::Forms::Button^ buttonn;
 				labeln = gcnew System::Windows::Forms::Label();
-				
+				buttonn = gcnew System::Windows::Forms::Button(); 
+
 				int len = labelsArray->Length;
-				int offset = 52+((15+5)*len);
+				int offset = 52+((15+10)*len);
 
 				labeln->AutoSize = true;
-				labeln->Location = System::Drawing::Point(20,offset);
+				labeln->Location = System::Drawing::Point(50,offset+5);
 				labeln->Name = L"l" + this->addFieldName->Text;
 				labeln->Size = System::Drawing::Size(this->addFieldName->Text->Length,15);
 				labeln->TabIndex = 3;
 				labeln->Text = this->addFieldName->Text;
 				labeln->BringToFront();
 
+				buttonn->AutoSize = true;
+				buttonn->Location = System::Drawing::Point(20,offset);
+				buttonn->Name = L"" + Convert::ToString(len);
+				buttonn->Size = System::Drawing::Size(this->addFieldName->Text->Length,15);
+				buttonn->TabIndex = 3;
+				buttonn->Text = "x";
+				buttonn->Click += gcnew System::EventHandler(this,&MainWindow::deleteFieldClick);
+				buttonn->BringToFront();
+				
 				System::Array::Resize(labelsArray,len+1);
+				System::Array::Resize(buttonsArray,len+1);
 				this->labelsArray[len] = labeln;
+				this->buttonsArray[len] = buttonn;
 				leftContainer->Panel1->Controls->Add(labelsArray[len]);
+				leftContainer->Panel1->Controls->Add(buttonsArray[len]);
 
 				//MessageBox::Show(labeln->Text);
 				//MessageBox::Show(labeln->Name);
@@ -438,6 +456,48 @@ private: System::Void addField_Click(System::Object^  sender, System::EventArgs^
 			 }
 		 }
 
+private: System::Void deleteFieldClick(System::Object^ sender,System::EventArgs^ e){
+			 Button ^b = safe_cast<Button^>(sender);
+			 deleteField(Convert::ToInt32(b->Name));
+			 //MessageBox::Show(b->Name);
+		 }
+
+/* Borra el campo con indice index*/
+private: System::Void deleteField(int index){
+			 if((index < labelsArray->Length)&&(index >= 0)){
+				 int balen, lalen, offset;
+				 lalen = labelsArray->Length;
+				 balen = buttonsArray->Length;
+				 //Debug::WriteLine(Convert::ToString(balen));
+				 for(int i = 0; i < lalen;i++){
+					 leftContainer->Panel1->Controls->Remove(labelsArray[i]);
+					 leftContainer->Panel1->Controls->Remove(buttonsArray[i]);
+				 }
+				 array <Label^>^ lArray = gcnew array<Label^>(0);
+				 array <Button^>^ bArray = gcnew array<Button^>(0);
+				 System::Array::Resize(lArray,lalen-1);
+				 System::Array::Resize(bArray,balen-1);
+				 System::Array::Copy(labelsArray,0,lArray,0,index);
+				 System::Array::Copy(buttonsArray,0,bArray,0,index);
+				 System::Array::Copy(labelsArray,index+1,lArray,index,lalen-index-1);
+				 System::Array::Copy(buttonsArray,index+1,bArray,index,balen-index-1);
+				 labelsArray = lArray;
+				 buttonsArray = bArray;
+				 lalen = labelsArray->Length;
+				 balen = buttonsArray->Length;
+				 for(int i = 0; i < lalen;i++){
+					 offset = 52+((15+10)*i);
+					 labelsArray[i]->Location = System::Drawing::Point(50,offset+5);
+					 buttonsArray[i]->Location = System::Drawing::Point(20,offset);
+					 buttonsArray[i]->Name = L"" + Convert::ToString(i);
+					 leftContainer->Panel1->Controls->Add(labelsArray[i]);
+					 leftContainer->Panel1->Controls->Add(buttonsArray[i]);
+				 }
+				 //labelsArray->Remove(labelsArray[index]);
+				 //buttonsArray->Remove(buttonsArray[index]);
+			 }
+			 
+		 }
 
 private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			this->fieldNames = gcnew array <String^>(this->labelsArray->Length);
