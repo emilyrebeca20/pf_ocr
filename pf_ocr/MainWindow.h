@@ -8,6 +8,7 @@ namespace pf_ocr {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	using namespace System::IO;
 
 	/// <summary>
 	/// Summary for MainWindow
@@ -66,6 +67,7 @@ namespace pf_ocr {
 	private: System::Windows::Forms::ToolStripMenuItem^  preProcessFilesToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  extractFieldInfoToolStripMenuItem;
 	private: System::Windows::Forms::DataGridView^  fieldTable;
+
 
 
 
@@ -149,6 +151,7 @@ namespace pf_ocr {
 			this->exportToolStripMenuItem->Size = System::Drawing::Size(147, 22);
 			this->exportToolStripMenuItem->Text = L"Exportar";
 			this->exportToolStripMenuItem->ToolTipText = L"Exportar a archivo en formato CSV.";
+			this->exportToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::exportToolStripMenuItem_Click);
 			// 
 			// toolStripSeparator1
 			// 
@@ -241,6 +244,7 @@ namespace pf_ocr {
 			this->addFieldName->Name = L"addFieldName";
 			this->addFieldName->Size = System::Drawing::Size(179, 20);
 			this->addFieldName->TabIndex = 2;
+			this->addFieldName->TextChanged += gcnew System::EventHandler(this, &MainWindow::addFieldName_TextChanged);
 			// 
 			// addField
 			// 
@@ -555,6 +559,49 @@ private: System::Void extractFieldContent(){
 			 rows->Add(fieldContent);
 		 }
 
+private: System::Void exportToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 SaveFileDialog ^ saveFileCSV = gcnew SaveFileDialog();
+			 saveFileCSV->Filter = "Archivo CSV|*.csv";
+			 saveFileCSV->Title = "Exportar a archivo CSV";
+			 saveFileCSV->ShowDialog();
+			 // If the file name is not an empty string, open it for saving.
+			 String^ fileName = saveFileCSV->FileName;
+
+			 if(saveFileCSV->FileName != ""){
+				StreamWriter^ pwriter = gcnew StreamWriter(fileName); 
+
+				Int32 nRow = fieldTable->RowCount;
+				Int32 nCol = fieldTable->ColumnCount;
+				String^ cell = "";
+				String^ line = "";
+			
+				DataGridViewRowCollection^ rows = this->fieldTable->Rows;
+				if (nRow && nCol){
+				
+					for (int i=0; i < nRow; i++){
+						DataGridViewRow^ dgvr = rows->default[i];	
+						for (int j=1; j<nCol; j++){
+							DataGridViewCell^ dgvcc= dgvr->Cells->default[j];
+							cell = Convert::ToString(dgvcc->Value);
+							line = line + cell->Remove(cell->Length-1);
+							if (j < nCol-1){
+								line = line + ";";
+							}
+						}
+					pwriter->WriteLine(line);
+					
+					//MessageBox::Show(line);
+					line = "";
+					}
+
+			
+				}
+				pwriter->Close();
+			}
+			
+		 }
+private: System::Void addFieldName_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
 };
 }
 
