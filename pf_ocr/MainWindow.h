@@ -91,6 +91,7 @@ namespace pf_ocr {
 		/// </summary>
 		void InitializeComponent(void)
 		{
+			System::ComponentModel::ComponentResourceManager^  resources = (gcnew System::ComponentModel::ComponentResourceManager(MainWindow::typeid));
 			this->menu_File = (gcnew System::Windows::Forms::MenuStrip());
 			this->fileToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFilesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -275,10 +276,11 @@ namespace pf_ocr {
 			this->ClientSize = System::Drawing::Size(1008, 561);
 			this->Controls->Add(this->mainContainer);
 			this->Controls->Add(this->menu_File);
+			this->Icon = (cli::safe_cast<System::Drawing::Icon^  >(resources->GetObject(L"$this.Icon")));
 			this->MainMenuStrip = this->menu_File;
 			this->MaximizeBox = false;
 			this->Name = L"MainWindow";
-			this->Text = L"MainWindow";
+			this->Text = L"pf_ocr";
 			this->Load += gcnew System::EventHandler(this, &MainWindow::MainWindow_Load);
 			this->menu_File->ResumeLayout(false);
 			this->menu_File->PerformLayout();
