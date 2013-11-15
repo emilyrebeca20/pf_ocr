@@ -9,6 +9,8 @@ namespace pf_ocr {
 	using namespace System::Data;
 	using namespace System::Drawing;
 	using namespace System::IO;
+	using namespace System::Reflection;
+	using namespace System::Resources;
 
 	/// <summary>
 	/// Summary for MainWindow
@@ -56,6 +58,7 @@ namespace pf_ocr {
 	private: array <Label^>^ labelsArray;
 	private: array <Button^>^ buttonsArray;
 	private: array <Label^>^ fnlabelsArray;
+	private: array <Button^>^ fnbuttonsArray;
 	private: array <String^>^ fieldNames;
 	
 
@@ -301,10 +304,11 @@ namespace pf_ocr {
 	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e) {
 				 API = new tesseract::TessBaseAPI();
 				 int res = API->Init(NULL,"spa");
-				 fileNamesGlobal = gcnew array<String^>(0);
-				 labelsArray = gcnew array<Label^>(0);
-				 buttonsArray = gcnew array<Button^>(0);
-				 fnlabelsArray = gcnew array<Label^>(0);
+				 fileNamesGlobal = gcnew array<String^>(0);		//Arreglo con los nombres de archivos
+				 labelsArray = gcnew array<Label^>(0);			//Arreglos con las etiquetas de campos
+				 buttonsArray = gcnew array<Button^>(0);		//Arreglo con los botones para borrar campos
+				 fnlabelsArray = gcnew array<Label^>(0);		//Arreglo con las etiquetas de los nombres de archivos
+				 buttonsArray = gcnew array<Button^>(0);		//Arreglo con los botones para borrar archivos
 				 //MessageBox::Show(System::Convert::ToString(res));
 			 }
 
@@ -377,6 +381,7 @@ private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, Syste
 			 
 		 }
 
+/* Devuelve una cadena con el texto extraido de la imagen */
 System::String^ getImageText(System::String^ image_path){
 		char *outText;
 
@@ -439,12 +444,21 @@ private: System::Void addField_Click(System::Object^  sender, System::EventArgs^
 				labeln->Text = this->addFieldName->Text;
 				labeln->BringToFront();
 
+				Assembly^ assembly = Assembly::GetExecutingAssembly();
+				AssemblyName^ assemblyName = assembly->GetName();
+				// Grab the images from the assembly
+				ResourceManager^ rm = gcnew ResourceManager(assemblyName->Name+".MainWindow", assembly);
+				Bitmap^ myicon = (Bitmap^)rm->GetObject("delete");
+				Bitmap^ dicon = gcnew Bitmap(myicon,16,16);
+				
 				buttonn->AutoSize = true;
 				buttonn->Location = System::Drawing::Point(20,offset);
 				buttonn->Name = L"" + Convert::ToString(len);
 				buttonn->Size = System::Drawing::Size(this->addFieldName->Text->Length,15);
 				buttonn->TabIndex = 3;
-				buttonn->Text = "x";
+				buttonn->Image = dicon;
+				buttonn->UseVisualStyleBackColor = false;
+				buttonn->BackColor = Color::Empty;
 				buttonn->Click += gcnew System::EventHandler(this,&MainWindow::deleteFieldClick);
 				buttonn->BringToFront();
 				
@@ -462,8 +476,10 @@ private: System::Void addField_Click(System::Object^  sender, System::EventArgs^
 			 }
 		 }
 
+/* Funcion que maneja el evento al hacer click para borrar un campo */
 private: System::Void deleteFieldClick(System::Object^ sender,System::EventArgs^ e){
 			 Button ^b = safe_cast<Button^>(sender);
+			 //MessageBox::Show(b->Name);
 			 deleteField(Convert::ToInt32(b->Name));
 			 //MessageBox::Show(b->Name);
 		 }
@@ -505,6 +521,7 @@ private: System::Void deleteField(int index){
 			 
 		 }
 
+/* Agrega los nombres de campos a la tabla*/
 private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			this->fieldNames = gcnew array <String^>(this->labelsArray->Length);
 			
@@ -524,6 +541,7 @@ private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  s
 
 		 }
 
+/* Extrae el contenido de la imagen y lo almacena en la tabla */
 private: System::Void extractFieldContent(){
 			 this->fieldNames = gcnew array <String^>(this->labelsArray->Length);
 			 //MessageBox::Show(Convert::ToString(labelsArray->Length));
@@ -561,6 +579,7 @@ private: System::Void extractFieldContent(){
 			 rows->Add(fieldContent);
 		 }
 
+/* Exporta los datos a un archivo CSV */
 private: System::Void exportToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 SaveFileDialog ^ saveFileCSV = gcnew SaveFileDialog();
 			 saveFileCSV->Filter = "Archivo CSV|*.csv";
@@ -602,6 +621,7 @@ private: System::Void exportToolStripMenuItem_Click(System::Object^  sender, Sys
 			}
 			
 		 }
+
 private: System::Void addFieldName_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 };
