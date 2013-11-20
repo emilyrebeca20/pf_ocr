@@ -11,6 +11,8 @@ namespace pf_ocr {
 	using namespace System::IO;
 	using namespace System::Reflection;
 	using namespace System::Resources;
+	using namespace System::Drawing::Imaging;
+	using namespace System::Diagnostics;
 
 	/// <summary>
 	/// Summary for MainWindow
@@ -51,6 +53,8 @@ namespace pf_ocr {
 
 	/* Declared by us */
 	private: array <String^>^ fileNamesGlobal;
+	private: array <Bitmap^>^ imagesNamesGlobal;
+	private: array <String^>^ sectionNamesGlobal;
 	private: tesseract::TessBaseAPI *API;
 	private: String ^ocrstring; 
 
@@ -70,6 +74,11 @@ namespace pf_ocr {
 	private: System::Windows::Forms::ToolStripMenuItem^  preProcessFilesToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  extractFieldInfoToolStripMenuItem;
 	private: System::Windows::Forms::DataGridView^  fieldTable;
+	private: System::Windows::Forms::ToolStripMenuItem^  readformsToolStripMenuItem;
+	private: System::Windows::Forms::ToolStripMenuItem^  readidToolStripMenuItem;
+	private: System::Windows::Forms::PictureBox^  pictureBoxT;
+
+
 
 
 
@@ -105,12 +114,15 @@ namespace pf_ocr {
 			this->processToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->preProcessFilesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->readSelectedFilesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->readformsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->readidToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->extractFieldInfoToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->openFilesDialog = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->mainContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->leftContainer = (gcnew System::Windows::Forms::SplitContainer());
 			this->addFieldName = (gcnew System::Windows::Forms::TextBox());
 			this->addField = (gcnew System::Windows::Forms::Button());
+			this->pictureBoxT = (gcnew System::Windows::Forms::PictureBox());
 			this->fieldTable = (gcnew System::Windows::Forms::DataGridView());
 			this->menu_File->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->mainContainer))->BeginInit();
@@ -119,7 +131,9 @@ namespace pf_ocr {
 			this->mainContainer->SuspendLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->leftContainer))->BeginInit();
 			this->leftContainer->Panel1->SuspendLayout();
+			this->leftContainer->Panel2->SuspendLayout();
 			this->leftContainer->SuspendLayout();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBoxT))->BeginInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->fieldTable))->BeginInit();
 			this->SuspendLayout();
 			// 
@@ -189,14 +203,30 @@ namespace pf_ocr {
 			this->preProcessFilesToolStripMenuItem->Name = L"preProcessFilesToolStripMenuItem";
 			this->preProcessFilesToolStripMenuItem->Size = System::Drawing::Size(265, 22);
 			this->preProcessFilesToolStripMenuItem->Text = L"Pre-procesar archivos seleccionados";
+			this->preProcessFilesToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::preProcessFilesToolStripMenuItem_Click);
 			// 
 			// readSelectedFilesToolStripMenuItem
 			// 
+			this->readSelectedFilesToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {this->readformsToolStripMenuItem, 
+				this->readidToolStripMenuItem});
 			this->readSelectedFilesToolStripMenuItem->Name = L"readSelectedFilesToolStripMenuItem";
 			this->readSelectedFilesToolStripMenuItem->Size = System::Drawing::Size(265, 22);
 			this->readSelectedFilesToolStripMenuItem->Text = L"Leer archivos seleccionados";
 			this->readSelectedFilesToolStripMenuItem->ToolTipText = L"Aplica OCR a las imágenes seleccionadas.";
-			this->readSelectedFilesToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::readSelectedFilesToolStripMenuItem_Click);
+			// 
+			// readformsToolStripMenuItem
+			// 
+			this->readformsToolStripMenuItem->Name = L"readformsToolStripMenuItem";
+			this->readformsToolStripMenuItem->Size = System::Drawing::Size(137, 22);
+			this->readformsToolStripMenuItem->Text = L"Formularios";
+			this->readformsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::readformsToolStripMenuItem_Click);
+			// 
+			// readidToolStripMenuItem
+			// 
+			this->readidToolStripMenuItem->Name = L"readidToolStripMenuItem";
+			this->readidToolStripMenuItem->Size = System::Drawing::Size(137, 22);
+			this->readidToolStripMenuItem->Text = L"Cédulas";
+			this->readidToolStripMenuItem->Click += gcnew System::EventHandler(this, &MainWindow::readidToolStripMenuItem_Click);
 			// 
 			// extractFieldInfoToolStripMenuItem
 			// 
@@ -236,8 +266,14 @@ namespace pf_ocr {
 			// 
 			// leftContainer.Panel1
 			// 
+			this->leftContainer->Panel1->AutoScroll = true;
 			this->leftContainer->Panel1->Controls->Add(this->addFieldName);
 			this->leftContainer->Panel1->Controls->Add(this->addField);
+			// 
+			// leftContainer.Panel2
+			// 
+			this->leftContainer->Panel2->AutoScroll = true;
+			this->leftContainer->Panel2->Controls->Add(this->pictureBoxT);
 			this->leftContainer->Size = System::Drawing::Size(300, 537);
 			this->leftContainer->SplitterDistance = 350;
 			this->leftContainer->TabIndex = 0;
@@ -259,6 +295,16 @@ namespace pf_ocr {
 			this->addField->Text = L"Agregar campo";
 			this->addField->UseVisualStyleBackColor = true;
 			this->addField->Click += gcnew System::EventHandler(this, &MainWindow::addField_Click);
+			// 
+			// pictureBoxT
+			// 
+			this->pictureBoxT->Dock = System::Windows::Forms::DockStyle::Fill;
+			this->pictureBoxT->Location = System::Drawing::Point(0, 0);
+			this->pictureBoxT->Name = L"pictureBoxT";
+			this->pictureBoxT->Size = System::Drawing::Size(300, 183);
+			this->pictureBoxT->SizeMode = System::Windows::Forms::PictureBoxSizeMode::AutoSize;
+			this->pictureBoxT->TabIndex = 0;
+			this->pictureBoxT->TabStop = false;
 			// 
 			// fieldTable
 			// 
@@ -293,8 +339,11 @@ namespace pf_ocr {
 			this->mainContainer->ResumeLayout(false);
 			this->leftContainer->Panel1->ResumeLayout(false);
 			this->leftContainer->Panel1->PerformLayout();
+			this->leftContainer->Panel2->ResumeLayout(false);
+			this->leftContainer->Panel2->PerformLayout();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->leftContainer))->EndInit();
 			this->leftContainer->ResumeLayout(false);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->pictureBoxT))->EndInit();
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^  >(this->fieldTable))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -314,14 +363,19 @@ namespace pf_ocr {
 
 /* Manejador que abre el dialogo para seleccionar los archivos a procesar */
 private: System::Void openFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 Bitmap^ tempImg;
 			 if(this->openFilesDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK){
 				 array<String^>^ filenames = this->openFilesDialog->FileNames;
 				 int len = fileNamesGlobal->Length;
 				 int fngIndex = len;
 				 int fnIndex = 0;
 				 Array::Resize(fileNamesGlobal,len+(filenames->Length));
+				 Array::Resize(imagesNamesGlobal,len+(filenames->Length));
+				 Array::Resize(sectionNamesGlobal,len+(filenames->Length * 2));
 				 for(fnIndex;fnIndex<filenames->Length;fnIndex++){
 					fileNamesGlobal[fngIndex] = filenames[fnIndex];
+					tempImg = gcnew Bitmap(filenames[fnIndex]);
+					imagesNamesGlobal[fngIndex] = tempImg;
 					fngIndex++;
 				 }
 			
@@ -362,7 +416,8 @@ private: System::Void openFilesToolStripMenuItem_Click(System::Object^  sender, 
 				 //delete [] outText;
 				 pixDestroy(&image);
 				 MessageBox::Show("Bye!");
-				 */				 
+				 */			
+				 //this->generateImageSections();
 			 }
 		 }
 
@@ -411,19 +466,6 @@ System::String^ getImageText(System::String^ image_path){
 		pixDestroy(&image);
 		return ocrstring;
 	}
-
-/* Comienza a procesar los archivos seleccionados*/
-private: System::Void readSelectedFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-				 int i;
-				 for(i = 0; i < fileNamesGlobal->Length;i++){
-					String^ msg = fileNamesGlobal[i];
-					//MessageBox::Show(msg);
-					String^ ocrtext = getImageText(msg);
-					extractFieldContent();
-					//MessageBox::Show(ocrtext);
-				 }
-			 
-			 }
 
 /* Agrega un campo a buscar en el formulario */
 private: System::Void addField_Click(System::Object^  sender, System::EventArgs^  e) {
@@ -623,6 +665,117 @@ private: System::Void exportToolStripMenuItem_Click(System::Object^  sender, Sys
 		 }
 
 private: System::Void addFieldName_TextChanged(System::Object^  sender, System::EventArgs^  e) {
+		 }
+
+private: System::Void  generateImageSections(){
+			 int i;
+			 String^ fileName;
+			 Bitmap^ cImg;
+			 System::Drawing::Rectangle cropNum =  System::Drawing::Rectangle(1425,685,950,150);
+			 System::Drawing::Rectangle cropNam =  System::Drawing::Rectangle(97,873,2009,450);
+			 
+			 for (i=0;i<imagesNamesGlobal->Length;i++)
+			 {
+				 fileName = FileInfo(fileNamesGlobal[i]).Name;
+				 
+				 cImg = imagesNamesGlobal[i]->Clone(cropNum,imagesNamesGlobal[i]->PixelFormat);
+				 cImg->Save("temp/cropNum"+fileName,ImageFormat::Png);
+				 sectionNamesGlobal[i] = "temp/cropNum"+fileName;
+
+				 cImg = imagesNamesGlobal[i]->Clone(cropNam,imagesNamesGlobal[i]->PixelFormat);
+				 cImg->Save("temp/cropNam"+fileName,ImageFormat::Png);
+				 sectionNamesGlobal[i+1] = "temp/cropNam"+fileName;
+				
+				 /*
+				 cropImage(imagesNamesGlobal[i],1,fileName);
+				 cropImage(imagesNamesGlobal[i],2,fileName);
+				 */
+			 }
+}
+
+/* Comienza a procesar los archivos seleccionados (formulario)*/
+private: System::Void readformsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 int i;
+			 for(i = 0; i < fileNamesGlobal->Length;i++){
+				 String^ msg = fileNamesGlobal[i];
+				 //MessageBox::Show(msg);
+				 String^ ocrtext = getImageText(msg);
+				 extractFieldContent();
+				 //MessageBox::Show(ocrtext);
+			 }		 
+		 }
+
+/* Comienza a procesar los archivos seleccionados (cedula)*/
+private: System::Void readidToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			 this->generateImageSections();
+			 int i;
+			 String^ msg;
+			 String^ ocrtext;
+			 for(i = 0; i < sectionNamesGlobal->Length;i++){
+				 msg = sectionNamesGlobal[i];
+				 MessageBox::Show(msg);
+				 ocrtext = getImageText(msg);
+				 msg = sectionNamesGlobal[i+1];
+				 ocrtext += getImageText(msg);
+				 MessageBox::Show(msg);
+				 i++;
+				 extractFieldContent();
+				 //MessageBox::Show(ocrtext);
+			 }
+		 }
+
+private: System::Void preprocessingImg(){
+		 pin_ptr<const wchar_t> wch = PtrToStringChars(fileNamesGlobal[0]);
+			 size_t convertedChars = 0;
+			 size_t  sizeInBytes = ((fileNamesGlobal[0]->Length + 1) * 2);
+			 errno_t err = 0;
+			 char *ip = (char *)malloc(sizeInBytes);
+			 err = wcstombs_s(&convertedChars, 
+				 ip, sizeInBytes,
+				 wch, sizeInBytes);
+
+			 //MessageBox::Show(image_path);
+			 // Open input image with leptonica library
+			 Pix *image = pixRead(ip);
+			 Pix *grayimage = pixConvertRGBToGray(image,0,0,0);
+
+			 PIX *pixb;
+			 l_int32    w_8, h_8, d;
+			 pixGetDimensions(pixg, &w_8, &h_8, &d);
+			 pixOtsuAdaptiveThreshold(grayimage,w_8,h_8,1,1,0.1,NULL,&pixb);
+			 
+			 NUMA *numarray = pixGetGrayHistogram(grayimage,8);
+			 float *hist = numarray->array;
+			 int hsize = numarray->n;
+			 Array^ histo = Array::CreateInstance(float::typeid,hsize);
+			 int init = hist[0];
+			 int index = 0;
+			 histo->SetValue(hist[0],0);
+			 for(int i = 1; i < hsize;i++){
+				 if(hist[i] > hist[i-1]){
+					 init = hist[i];
+					 index = i;
+				 }
+				 histo->SetValue(hist[i],i);
+
+			 }
+			 Debug::WriteLine(init);
+			 Debug::WriteLine(index);
+			 Debug::WriteLine(hist[index]);
+			 Debug::WriteLine(histo->GetValue(index));
+
+			 Pix *thresimage = pixThresholdToBinary(grayimage,init);
+
+			 Pix *medianimage = pixMedianFilter(thresimage,1,1);
+			 HBITMAP hbmp = pixGetWindowsHBITMAP(thresimage);
+			 Bitmap^ bmp = Bitmap::FromHbitmap((IntPtr)hbmp);
+			 pictureBoxT->Image = bmp;		 
+
+
+		 //return img;
+		 }
+private: System::Void preProcessFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
+			preprocessingImg();
 		 }
 };
 }
