@@ -1,4 +1,4 @@
-﻿Build started 20/11/2013 22:27:10.
+﻿Build started 20/11/2013 23:43:14.
      1>Project "C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\pf_ocr\pf_ocr.vcxproj" on node 2 (build target(s)).
      1>InitializeBuildStatus:
          Creating "Release\pf_ocr.unsuccessfulbuild" because "AlwaysCreate" was specified.
@@ -6,15 +6,27 @@
        Skipping target "GenerateTargetFrameworkMonikerAttribute" because all output files are up-to-date with respect to the input files.
        ClCompile:
          All outputs are up-to-date.
-         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /I..\tesseract\include /I..\leptonica\include /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr /nologo /W3 /WX- /O2 /Oy- /D WIN32 /D NDEBUG /D _UNICODE /D UNICODE /EHa /MD /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Release\pf_ocr.pch" /Fo"Release\\" /Fd"Release\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt MainWindow.cpp pf_ocr.cpp /clr:nostdlib 
+         MainWindow.cpp
+     1>c:\users\emily\documents\visual studio 2010\projects\pf_ocr\pf_ocr\MainWindow.h(650): warning C4305: 'argument' : truncation from 'double' to 'l_float32'
+         pf_ocr.cpp
+     1>c:\users\emily\documents\visual studio 2010\projects\pf_ocr\pf_ocr\MainWindow.h(650): warning C4305: 'argument' : truncation from 'double' to 'l_float32'
+         Generating Code...
          All outputs are up-to-date.
        CoreResGen:
          All outputs are up-to-date.
        ResourceCompile:
          All outputs are up-to-date.
        Link:
-         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\tesseract\lib /LIBPATH:..\leptonica\lib libtesseract302.lib liblept168.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /ASSEMBLYRESOURCE:Release\pf_ocr.Form1.resources /ASSEMBLYRESOURCE:Release\pf_ocr.MainWindow.resources /MANIFEST /ManifestFile:"Release\pf_ocr.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Release\app.res
+         Release\AssemblyInfo.obj
+         Release\MainWindow.obj
+         Release\pf_ocr.obj
+         Release\stdafx.obj
+         "Release\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
          pf_ocr.vcxproj -> C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"C:\Users\Emily\Documents\Visual Studio 2010\Projects\pf_ocr\Release\pf_ocr.exe;#1" /manifest Release\pf_ocr.exe.intermediate.manifest
        FinalizeBuildStatus:
          Deleting file "Release\pf_ocr.unsuccessfulbuild".
          Touching "Release\pf_ocr.lastbuildstate".
@@ -22,4 +34,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.10
+Time Elapsed 00:00:01.17

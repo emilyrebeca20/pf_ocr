@@ -50,14 +50,13 @@ namespace pf_ocr {
 	private: System::Windows::Forms::ToolStripSeparator^  toolStripSeparator1;
 	private: System::Windows::Forms::ToolStripMenuItem^  exportToolStripMenuItem;
 
-
 	/* Declared by us */
 	private: array <String^>^ fileNamesGlobal;
 	private: array <Bitmap^>^ imagesNamesGlobal;
 	private: array <String^>^ sectionNamesGlobal;
 	private: tesseract::TessBaseAPI *API;
 	private: String ^ocrstring; 
-
+	private: Int32 PRE_PROCESS;
 
 	private: array <Label^>^ labelsArray;
 	private: array <Button^>^ buttonsArray;
@@ -65,7 +64,6 @@ namespace pf_ocr {
 	private: array <Button^>^ fnbuttonsArray;
 	private: array <String^>^ fieldNames;
 	
-
 	private: System::Windows::Forms::SplitContainer^  mainContainer;
 	private: System::Windows::Forms::SplitContainer^  leftContainer;
 	private: System::Windows::Forms::Button^  addField;
@@ -77,14 +75,6 @@ namespace pf_ocr {
 	private: System::Windows::Forms::ToolStripMenuItem^  readformsToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  readidToolStripMenuItem;
 	private: System::Windows::Forms::PictureBox^  pictureBoxT;
-
-
-
-
-
-
-
-
 
 			 /*-----------------*/
 
@@ -200,6 +190,7 @@ namespace pf_ocr {
 			// 
 			// preProcessFilesToolStripMenuItem
 			// 
+			this->preProcessFilesToolStripMenuItem->CheckOnClick = true;
 			this->preProcessFilesToolStripMenuItem->Name = L"preProcessFilesToolStripMenuItem";
 			this->preProcessFilesToolStripMenuItem->Size = System::Drawing::Size(265, 22);
 			this->preProcessFilesToolStripMenuItem->Text = L"Pre-procesar archivos seleccionados";
@@ -284,7 +275,6 @@ namespace pf_ocr {
 			this->addFieldName->Name = L"addFieldName";
 			this->addFieldName->Size = System::Drawing::Size(179, 20);
 			this->addFieldName->TabIndex = 2;
-			this->addFieldName->TextChanged += gcnew System::EventHandler(this, &MainWindow::addFieldName_TextChanged);
 			// 
 			// addField
 			// 
@@ -350,7 +340,10 @@ namespace pf_ocr {
 
 		}
 #pragma endregion
-	private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e) {
+
+/* Codigo a ejecutarse al cargar la ventana principal de la aplicacion, consiste principalmente de
+inicializaciones de variables y arreglos */
+private: System::Void MainWindow_Load(System::Object^  sender, System::EventArgs^  e) {
 				 API = new tesseract::TessBaseAPI();
 				 int res = API->Init(NULL,"spa");
 				 fileNamesGlobal = gcnew array<String^>(0);		//Arreglo con los nombres de archivos
@@ -358,10 +351,12 @@ namespace pf_ocr {
 				 buttonsArray = gcnew array<Button^>(0);		//Arreglo con los botones para borrar campos
 				 fnlabelsArray = gcnew array<Label^>(0);		//Arreglo con las etiquetas de los nombres de archivos
 				 buttonsArray = gcnew array<Button^>(0);		//Arreglo con los botones para borrar archivos
+				 PRE_PROCESS = 0;
 				 //MessageBox::Show(System::Convert::ToString(res));
 			 }
 
-/* Manejador que abre el dialogo para seleccionar los archivos a procesar */
+/* Manejador invoca el dialogo para seleccionar los archivos a procesar y luego almacenar sus rutas,
+en un arreglo global. Puede seleccionarse mas de un archivo a la vez */
 private: System::Void openFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			 Bitmap^ tempImg;
 			 if(this->openFilesDialog->ShowDialog() == System::Windows::Forms::DialogResult::OK){
@@ -378,46 +373,6 @@ private: System::Void openFilesToolStripMenuItem_Click(System::Object^  sender, 
 					imagesNamesGlobal[fngIndex] = tempImg;
 					fngIndex++;
 				 }
-			
-				 /*
-				 char *outText;
-				 tesseract::TessBaseAPI *api = new tesseract::TessBaseAPI();
-				 // Initialize tesseract-ocr with English, without specifying tessdata path
-				 //int res = api->Init(".\\", "spa");
-				 //MessageBox::Show(System::Convert::ToString(res));
-				 api->Init(NULL,"spa");
-				 if (!api->SetVariable("save_blob_choices","T"))
-					 MessageBox::Show("Setting variable failed!!!\n");
-				 // Open input image with leptonica library
-				 Pix *image = pixRead("image_gallery.png");
-				 api->SetImage(image);
-				 MessageBox::Show("Entry");
-				 outText = api->GetUTF8Text();
-				 String ^ocrstring = gcnew String(outText);
-				 MessageBox::Show(ocrstring);
-				 api->End();
-				 //delete [] outText;
-				 MessageBox::Show("Out");
-				 pixDestroy(&image);
-				 */
-
-				 /*
-				 //MessageBox::Show(image_path);
-				 // Abrir imagen de entrada con la biblioteca leptonica
-				 Pix *image = pixRead("image_gallery.png");
-				 API->SetImage(image);
-				 // Obtener el resultado OCR
-				 char *outText;
-				 outText = API->GetUTF8Text();
-				 String ^ocrstring = gcnew String(outText);
-				 MessageBox::Show(ocrstring);
-				 //Destruir objetos y liberar memoria
-				 //API->ClearAdaptiveClassifier();
-				 //delete [] outText;
-				 pixDestroy(&image);
-				 MessageBox::Show("Bye!");
-				 */			
-				 //this->generateImageSections();
 			 }
 		 }
 
@@ -432,14 +387,13 @@ private: System::Void exitToolStripMenuItem_Click(System::Object^  sender, Syste
 			 {
 				 API->End();
 				 Application::Exit();
-			 }
-			 
+			 } 
 		 }
 
 /* Devuelve una cadena con el texto extraido de la imagen */
 System::String^ getImageText(System::String^ image_path){
 		char *outText;
-
+		//Se convierte la ruta
 		pin_ptr<const wchar_t> wch = PtrToStringChars(image_path);
 		size_t convertedChars = 0;
 		size_t  sizeInBytes = ((image_path->Length + 1) * 2);
@@ -448,26 +402,21 @@ System::String^ getImageText(System::String^ image_path){
 		err = wcstombs_s(&convertedChars, 
 			ip, sizeInBytes,
 			wch, sizeInBytes);
-		
-		//MessageBox::Show(image_path);
-		// Open input image with leptonica library
+		//Se lee la imagen utilizando leptonica
 		Pix *image = pixRead(ip);
+		//Se verifica si esta seleccionada la etapa de preprocesamiento
+		/*if(PRE_PROCESS){
+			image = preprocessingImg(image);
+		}*/
 		API->SetImage(image);
-		// Get OCR result
 		outText = API->GetUTF8Text();
-
 		ocrstring = gcnew String(outText);
-		//MessageBox::Show(ocrstring);
-
-		// Destroy used object and release memory
 		API->ClearAdaptiveClassifier();
-		//delete [] outText;
-		/* IMPORTANTE: averiguar como liberar la memoria de outText!!! */
 		pixDestroy(&image);
 		return ocrstring;
 	}
 
-/* Agrega un campo a buscar en el formulario */
+/* Agrega un campo a buscar en el formulario y su respectivo boton de eliminar */
 private: System::Void addField_Click(System::Object^  sender, System::EventArgs^  e) {
 			 if(this->addFieldName->Text->Length){
 				System::Windows::Forms::Label^  labeln;
@@ -488,11 +437,9 @@ private: System::Void addField_Click(System::Object^  sender, System::EventArgs^
 
 				Assembly^ assembly = Assembly::GetExecutingAssembly();
 				AssemblyName^ assemblyName = assembly->GetName();
-				// Grab the images from the assembly
 				ResourceManager^ rm = gcnew ResourceManager(assemblyName->Name+".MainWindow", assembly);
 				Bitmap^ myicon = (Bitmap^)rm->GetObject("delete");
 				Bitmap^ dicon = gcnew Bitmap(myicon,16,16);
-				
 				buttonn->AutoSize = true;
 				buttonn->Location = System::Drawing::Point(20,offset);
 				buttonn->Name = L"" + Convert::ToString(len);
@@ -510,23 +457,19 @@ private: System::Void addField_Click(System::Object^  sender, System::EventArgs^
 				this->buttonsArray[len] = buttonn;
 				leftContainer->Panel1->Controls->Add(labelsArray[len]);
 				leftContainer->Panel1->Controls->Add(buttonsArray[len]);
-
-				//MessageBox::Show(labeln->Text);
-				//MessageBox::Show(labeln->Name);
-
 				this->addFieldName->Text = "";
+			 }else{
+				 MessageBox::Show("El campo no puede ser una cadena vacía.");
 			 }
 		 }
 
 /* Funcion que maneja el evento al hacer click para borrar un campo */
 private: System::Void deleteFieldClick(System::Object^ sender,System::EventArgs^ e){
 			 Button ^b = safe_cast<Button^>(sender);
-			 //MessageBox::Show(b->Name);
 			 deleteField(Convert::ToInt32(b->Name));
-			 //MessageBox::Show(b->Name);
 		 }
 
-/* Borra el campo con indice index*/
+/* Borra el campo con indice index */
 private: System::Void deleteField(int index){
 			 if((index < labelsArray->Length)&&(index >= 0)){
 				 int balen, lalen, offset;
@@ -557,8 +500,8 @@ private: System::Void deleteField(int index){
 					 leftContainer->Panel1->Controls->Add(labelsArray[i]);
 					 leftContainer->Panel1->Controls->Add(buttonsArray[i]);
 				 }
-				 //labelsArray->Remove(labelsArray[index]);
-				 //buttonsArray->Remove(buttonsArray[index]);
+			 }else{
+				 MessageBox::Show("Error eliminando campo.");
 			 }
 			 
 		 }
@@ -566,13 +509,10 @@ private: System::Void deleteField(int index){
 /* Agrega los nombres de campos a la tabla*/
 private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			this->fieldNames = gcnew array <String^>(this->labelsArray->Length);
-			
-			
 			for (int i=0; i<labelsArray->Length; i++)
 			{
 				fieldNames[i] = this->labelsArray[i]->Text;
 			}
-			
 			fieldTable->ColumnCount = fieldNames->Length+1;
 			fieldTable->Columns[0]->Name = "#";
 			int j = 0;
@@ -580,45 +520,28 @@ private: System::Void extractFieldInfoToolStripMenuItem_Click(System::Object^  s
 				fieldTable->Columns[i]->Name = fieldNames[j];
 				j++;
 			}
-
 		 }
 
-/* Extrae el contenido de la imagen y lo almacena en la tabla */
+/* Extrae el contenido de la imagen y lo almacena en la tabla segun los campos agregados */
 private: System::Void extractFieldContent(){
-			 this->fieldNames = gcnew array <String^>(this->labelsArray->Length);
-			 //MessageBox::Show(Convert::ToString(labelsArray->Length));
-
-			 for (int i=0; i<labelsArray->Length; i++)
-			 {
-				 fieldNames[i] = this->labelsArray[i]->Text;
-			 }
-
-			 array <String^>^ fieldContent = gcnew array <String^>(this->labelsArray->Length);
-			 fieldContent = this->ocrstring->Split(fieldNames,StringSplitOptions::None);	
-
-			// MessageBox::Show(Convert::ToString(fieldContent->Length));
-
-			 /*for (int i=0; i<fieldContent->Length; i++)
-			 {
-				 MessageBox::Show(Convert::ToString(i));
-				 MessageBox::Show(fieldContent[i]);
-			 }*/
-			 //MessageBox::Show(row);
-
-			 fieldTable->ColumnCount = fieldNames->Length+1;
-			 fieldTable->Columns[0]->Name = "#";
-			 int j = 0;
-			 for (int i=1; i<=fieldNames->Length; i++){
-				 fieldTable->Columns[i]->Name = fieldNames[j];
-				 j++;
-			 }
-
-			 int^ rowNumber = (fieldTable->Rows->Count) + 1;
-			 //MessageBox::Show(Convert::ToString(rowNumber));
-			 fieldContent[0] = Convert::ToString(rowNumber);
-
-			 DataGridViewRowCollection^ rows = this->fieldTable->Rows;
-			 rows->Add(fieldContent);
+				this->fieldNames = gcnew array <String^>(this->labelsArray->Length);
+				for (int i=0; i<labelsArray->Length; i++)
+				{
+					fieldNames[i] = this->labelsArray[i]->Text;
+				}
+				array <String^>^ fieldContent = gcnew array <String^>(this->labelsArray->Length);
+				fieldContent = this->ocrstring->Split(fieldNames,StringSplitOptions::None);	
+				fieldTable->ColumnCount = fieldNames->Length+1;
+				fieldTable->Columns[0]->Name = "#";
+				int j = 0;
+				for (int i=1; i<=fieldNames->Length; i++){
+					fieldTable->Columns[i]->Name = fieldNames[j];
+					j++;
+				}
+				int^ rowNumber = (fieldTable->Rows->Count) + 1;
+				fieldContent[0] = Convert::ToString(rowNumber);
+				DataGridViewRowCollection^ rows = this->fieldTable->Rows;
+				rows->Add(fieldContent);
 		 }
 
 /* Exporta los datos a un archivo CSV */
@@ -627,20 +550,15 @@ private: System::Void exportToolStripMenuItem_Click(System::Object^  sender, Sys
 			 saveFileCSV->Filter = "Archivo CSV|*.csv";
 			 saveFileCSV->Title = "Exportar a archivo CSV";
 			 saveFileCSV->ShowDialog();
-			 // If the file name is not an empty string, open it for saving.
 			 String^ fileName = saveFileCSV->FileName;
-
 			 if(saveFileCSV->FileName != ""){
 				StreamWriter^ pwriter = gcnew StreamWriter(fileName); 
-
 				Int32 nRow = fieldTable->RowCount;
 				Int32 nCol = fieldTable->ColumnCount;
 				String^ cell = "";
 				String^ line = "";
-			
 				DataGridViewRowCollection^ rows = this->fieldTable->Rows;
 				if (nRow && nCol){
-				
 					for (int i=0; i < nRow; i++){
 						DataGridViewRow^ dgvr = rows->default[i];	
 						for (int j=1; j<nCol; j++){
@@ -652,19 +570,11 @@ private: System::Void exportToolStripMenuItem_Click(System::Object^  sender, Sys
 							}
 						}
 					pwriter->WriteLine(line);
-					
-					//MessageBox::Show(line);
 					line = "";
 					}
-
-			
 				}
 				pwriter->Close();
 			}
-			
-		 }
-
-private: System::Void addFieldName_TextChanged(System::Object^  sender, System::EventArgs^  e) {
 		 }
 
 private: System::Void  generateImageSections(){
@@ -695,13 +605,19 @@ private: System::Void  generateImageSections(){
 
 /* Comienza a procesar los archivos seleccionados (formulario)*/
 private: System::Void readformsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			 int i;
-			 for(i = 0; i < fileNamesGlobal->Length;i++){
-				 String^ msg = fileNamesGlobal[i];
-				 //MessageBox::Show(msg);
-				 String^ ocrtext = getImageText(msg);
-				 extractFieldContent();
-				 //MessageBox::Show(ocrtext);
+			 if(fileNamesGlobal->Length){
+				 if(labelsArray->Length){
+					 int i;
+					 for(i = 0; i < fileNamesGlobal->Length;i++){
+						 String^ msg = fileNamesGlobal[i];
+						 String^ ocrtext = getImageText(msg);
+						 extractFieldContent();
+					 }
+				 }else{
+					 MessageBox::Show("Debe indicar al menos un campo a buscar.");
+				 }
+			 }else{
+				 MessageBox::Show("Debe seleccionar al menos un archivo.");
 			 }		 
 		 }
 
@@ -724,61 +640,27 @@ private: System::Void readidToolStripMenuItem_Click(System::Object^  sender, Sys
 			 }
 		 }
 
-private: System::Void preprocessingImg(){
-		 pin_ptr<const wchar_t> wch = PtrToStringChars(fileNamesGlobal[0]);
-			 size_t convertedChars = 0;
-			 size_t  sizeInBytes = ((fileNamesGlobal[0]->Length + 1) * 2);
-			 errno_t err = 0;
-			 char *ip = (char *)malloc(sizeInBytes);
-			 err = wcstombs_s(&convertedChars, 
-				 ip, sizeInBytes,
-				 wch, sizeInBytes);
-
-			 //MessageBox::Show(image_path);
-			 // Open input image with leptonica library
-			 Pix *image = pixRead(ip);
+/* Procesamiento previo de la imagen a analizar */
+private: Pix *preprocessingImg(Pix * image){
+			 /* Convierte a escala de grises y binariza */
 			 Pix *grayimage = pixConvertRGBToGray(image,0,0,0);
-
-			 PIX *pixb;
-			 l_int32    w_8, h_8, d;
+			 PIX *thresimage;
+			 l_int32 w_8, h_8, d;
 			 pixGetDimensions(grayimage, &w_8, &h_8, &d);
-			 pixOtsuAdaptiveThreshold(grayimage,w_8,h_8,1,1,0.1,NULL,&pixb);
-			 
-			 /*
-			 NUMA *numarray = pixGetGrayHistogram(grayimage,8);
-			 float *hist = numarray->array;
-			 int hsize = numarray->n;
-			 Array^ histo = Array::CreateInstance(float::typeid,hsize);
-			 int init = hist[0];
-			 int index = 0;
-			 histo->SetValue(hist[0],0);
-			 for(int i = 1; i < hsize;i++){
-				 if(hist[i] > hist[i-1]){
-					 init = hist[i];
-					 index = i;
-				 }
-				 histo->SetValue(hist[i],i);
-
-			 }
-			 Debug::WriteLine(init);
-			 Debug::WriteLine(index);
-			 Debug::WriteLine(hist[index]);
-			 Debug::WriteLine(histo->GetValue(index));
-			 */
-
-			 //Pix *thresimage = pixThresholdToBinary(grayimage,init);
-
+			 pixOtsuAdaptiveThreshold(grayimage,w_8,h_8,1,1,0.1,NULL,&thresimage);
 			 //Pix *medianimage = pixMedianFilter(thresimage,1,1);
-			 HBITMAP hbmp = pixGetWindowsHBITMAP(pixb);
+			 
+			 //Para probar
+			 HBITMAP hbmp = pixGetWindowsHBITMAP(thresimage);
 			 Bitmap^ bmp = Bitmap::FromHbitmap((IntPtr)hbmp);
 			 pictureBoxT->Image = bmp;		 
-
-
-		 //return img;
+			 return thresimage;
 		 }
 
+/* Se cambia la bandera dependiendo de la seleccion */
 private: System::Void preProcessFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
-			preprocessingImg();
+			if(PRE_PROCESS) PRE_PROCESS = 0;
+			else PRE_PROCESS = 1;
 		 }
 };
 }
