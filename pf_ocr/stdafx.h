@@ -6,6 +6,7 @@
 // TODO: reference additional headers your program requires here
 #include "tesseract\baseapi.h"
 #include "leptonica\allheaders.h"
+#include "leptonica\leptwin.h"
 
 #include < stdio.h >
 #include < stdlib.h >

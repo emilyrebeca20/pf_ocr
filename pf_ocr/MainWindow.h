@@ -741,9 +741,10 @@ private: System::Void preprocessingImg(){
 
 			 PIX *pixb;
 			 l_int32    w_8, h_8, d;
-			 pixGetDimensions(pixg, &w_8, &h_8, &d);
+			 pixGetDimensions(grayimage, &w_8, &h_8, &d);
 			 pixOtsuAdaptiveThreshold(grayimage,w_8,h_8,1,1,0.1,NULL,&pixb);
 			 
+			 /*
 			 NUMA *numarray = pixGetGrayHistogram(grayimage,8);
 			 float *hist = numarray->array;
 			 int hsize = numarray->n;
@@ -763,17 +764,19 @@ private: System::Void preprocessingImg(){
 			 Debug::WriteLine(index);
 			 Debug::WriteLine(hist[index]);
 			 Debug::WriteLine(histo->GetValue(index));
+			 */
 
-			 Pix *thresimage = pixThresholdToBinary(grayimage,init);
+			 //Pix *thresimage = pixThresholdToBinary(grayimage,init);
 
-			 Pix *medianimage = pixMedianFilter(thresimage,1,1);
-			 HBITMAP hbmp = pixGetWindowsHBITMAP(thresimage);
+			 //Pix *medianimage = pixMedianFilter(thresimage,1,1);
+			 HBITMAP hbmp = pixGetWindowsHBITMAP(pixb);
 			 Bitmap^ bmp = Bitmap::FromHbitmap((IntPtr)hbmp);
 			 pictureBoxT->Image = bmp;		 
 
 
 		 //return img;
 		 }
+
 private: System::Void preProcessFilesToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e) {
 			preprocessingImg();
 		 }

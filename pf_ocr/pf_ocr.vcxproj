@@ -90,6 +90,7 @@
     <None Include="..\..\..\..\..\Desktop\Iconos\delete.png" />
     <None Include="app.ico" />
     <None Include="delete.ico" />
+    <None Include="delete.png" />
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>

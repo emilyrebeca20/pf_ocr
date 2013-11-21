@@ -28,6 +28,9 @@
     <None Include="..\..\..\..\..\Desktop\Iconos\delete.png">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="delete.png">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pf_ocr.cpp">
